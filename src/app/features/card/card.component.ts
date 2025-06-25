@@ -1,5 +1,6 @@
 import { Component,Input,ViewChild,ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PlayerComponent } from "../player/player.component";
 
 interface Playlist {
   id: number;
@@ -10,7 +11,7 @@ interface Playlist {
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule],
+  imports: [CommonModule, PlayerComponent],
   standalone: true,
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
@@ -34,6 +35,8 @@ export class CardComponent {
 
   pageSize = 5;
   currentPage = 0;
+
+  selectedPlaylist: { id: string, title: string, description: string, image: string } | null = null;
 
   @Input() image!: string;
   @Input() title!: string;
@@ -74,6 +77,14 @@ export class CardComponent {
 
   reset() {
     this.currentPage = 0;
+  }
+
+  openPlayer(playlist: any) {
+    this.selectedPlaylist = playlist;
+  }
+
+  closePlayer() {
+    this.selectedPlaylist = null;
   }
 
 
