@@ -6,7 +6,6 @@
 
     <div id="player">
 
-
       <div id="player-content">
         <div class="close">
           <button (click)="close.emit()" class="close-button">✕</button>
@@ -16,6 +15,8 @@
           <div id="buffer-box">Buffering ...</div>
         </div>
         <div id="player-controls">
+          <div id="album-name">{{ playlist?.title }}</div>
+          <div id="track-name">{{ playlist?.description }}</div>
           <div class="control">
             <div class="button" id="play-previous">
               <!-- Icone Previous -->

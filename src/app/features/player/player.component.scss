@@ -4,7 +4,7 @@
   right: 0;
   left: 0;
   width: 430px;
-  height: 130px;
+  height: 180px;
   margin: -4px auto;
 }
 
@@ -56,6 +56,7 @@
 /* Font Adjustments */
 #album-name {
   color: #54576f;
+  user-select: none;
   font-size: 17px;
   font-weight: bold;
   font-family: 'Raleway', sans-serif; /* Bold & Modern for Album Name */
@@ -63,6 +64,7 @@
 
 #track-name {
   color: #acaebd;
+  user-select: none;
   font-size: 13px;
   margin: 2px 0 13px 0;
   font-family: 'EB Garamond', serif; /* Classic Italic for Song Title */
