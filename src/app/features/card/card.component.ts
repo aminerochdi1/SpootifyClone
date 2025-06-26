@@ -1,13 +1,7 @@
-import { Component,Input,ViewChild,ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlayerComponent } from "../player/player.component";
-
-interface Playlist {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-}
+import { PlaylistService, Playlist } from '../../services/playlist.service';
 
 @Component({
   selector: 'app-card',
@@ -18,25 +12,11 @@ interface Playlist {
 })
 export class CardComponent {
 
-  playlists: Playlist[] = [
-    {
-      id: 1,
-      image: 'https://i.scdn.co/image/ab67706f000000026383701ce8b3495cf507d796',
-      title: "Today's Top Hits",
-      description: "Bad Bunny is on top of the Hottest 50!"
-    },
-    {
-      id: 2,
-      image: 'https://i.scdn.co/image/ab67706f00000002d28cc600e29364a65d463ee2',
-      title: "RapCaviar",
-      description: "New music from Roddy Ricch, and more."
-    },
-  ];
-
+  playlists: Playlist[] = [];
   pageSize = 5;
   currentPage = 0;
 
-  selectedPlaylist: { id: string, title: string, description: string, image: string } | null = null;
+  selectedPlaylist: Playlist | null = null;
 
   @Input() image!: string;
   @Input() title!: string;
@@ -44,18 +24,33 @@ export class CardComponent {
 
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef<HTMLDivElement>;
 
-  trackById(index: number, playlist: Playlist): number {
-    return playlist.id;
+  constructor(private playlistService: PlaylistService) {}
+
+  ngOnInit() {
+    this.fetchPlaylists();
+  }
+
+  fetchPlaylists() {
+    this.playlistService.getAllPlaylists().subscribe({
+      next: (data: Playlist[]) => {
+        this.playlists = data;
+      },
+      error: (err) => {
+        console.error("Erreur de récupération des playlists :", err);
+      }
+    });
+  }
+
+  trackById(index: number, playlist: Playlist): string {
+    return playlist._id;
   }
 
   get visiblePlaylists() {
-    // Retourne uniquement les playlists de la page courante
     const start = this.currentPage * this.pageSize;
     return this.playlists.slice(start, start + this.pageSize);
   }
 
   get canShowNext() {
-    // Indique s'il y a une page suivante
     return (this.currentPage + 1) * this.pageSize < this.playlists.length;
   }
 
@@ -79,13 +74,12 @@ export class CardComponent {
     this.currentPage = 0;
   }
 
-  openPlayer(playlist: any) {
+  openPlayer(playlist: Playlist) {
     this.selectedPlaylist = playlist;
   }
 
   closePlayer() {
     this.selectedPlaylist = null;
   }
-
 
 }
