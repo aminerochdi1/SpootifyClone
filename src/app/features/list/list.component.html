@@ -9,6 +9,14 @@
                       </div>
                       <img [src]="song.coverImage" alt="{{ song.title }}" style="width: 100px; border-radius: 5px;" />
                     </div>
+                    <div class="progress-container" *ngIf="currentSongId === song._id">
+                      <div class="progress-bar">
+                        <div
+                          class="progress"
+                          [style.width.%]="(currentTime / duration) * 100"
+                        ></div>
+                      </div>
+                    </div>
               </div>
               <div class="trackname">
                 <h3>{{ song.title }}</h3>
@@ -31,7 +39,7 @@
                       <div class="control">
                         <div class="button" id="play-pause-button" (click)="playSong(song)">
                           <svg *ngIf="currentSongId !== song._id || !isPlaying" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z" /> <!-- ▶Play -->
+                            <path d="M8 5v14l11-7z" /> <!-- ▶ Play -->
                           </svg>
 
                           <svg *ngIf="currentSongId === song._id && isPlaying" class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
