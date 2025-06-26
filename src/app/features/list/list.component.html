@@ -1,0 +1,50 @@
+
+<div class="songs" *ngIf="songs.length > 0">
+  <div class="track" *ngFor="let song of songs">
+          <div class="trackplay">
+              <div class="play">
+                    <div class="cover">
+                      <div class="time" *ngIf="currentSongId === song._id">
+                        {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+                      </div>
+                      <img [src]="song.coverImage" alt="{{ song.title }}" style="width: 100px; border-radius: 5px;" />
+                    </div>
+              </div>
+              <div class="trackname">
+                <h3>{{ song.title }}</h3>
+                <h4>By {{ song.artist }}</h4>
+              </div>
+          </div>
+          <div class="fav">
+              <div>
+                <div id="player-controls">
+                <!-- Icone Pause -->
+                  <div class="control">
+                    <div class="button" id="play-previous" (click)="pause()">
+
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /> <!-- Pause -->
+                      </svg>
+                    </div>
+                  </div>
+                      <!-- Icone Play -->
+                      <div class="control">
+                        <div class="button" id="play-pause-button" (click)="playSong(song)">
+                          <svg *ngIf="currentSongId !== song._id || !isPlaying" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z" /> <!-- ▶Play -->
+                          </svg>
+
+                          <svg *ngIf="currentSongId === song._id && isPlaying" class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 18V6l8 6-8 6Z" />
+                          </svg>
+                        </div>
+                      </div>
+
+
+                </div>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
