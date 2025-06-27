@@ -8,6 +8,7 @@ export interface Song {
   artist: string;
   duration: number | null;
   file: string;
+  liked:boolean;
   coverImage: string;
   createdAt: string;
   updatedAt: string;
@@ -15,6 +16,7 @@ export interface Song {
 
 @Injectable({ providedIn: 'root' })
 export class SongService {
+
   private apiUrl = 'http://localhost:3000/api/songs';
 
   constructor(private http: HttpClient) {}

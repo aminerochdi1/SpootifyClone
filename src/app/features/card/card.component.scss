@@ -1,3 +1,5 @@
+
+
 /* View port */
 .view-port {
   grid-area: view-port;
@@ -120,9 +122,11 @@
   font-weight: 700;
   font-size: 1em;
   margin-bottom: 5px;
+  text-transform: capitalize;
 }
 
 .play_cover + p + p {
   font-size: 0.9em;
   color: #c9c9c9;
+  text-transform: capitalize;
 }

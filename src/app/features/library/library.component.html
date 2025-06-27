@@ -5,9 +5,13 @@
     <div class="spinner"></div>
 </div>
 
+<div *ngIf="songs.length == 0 " class="no-songs">
+ <p>Aucune chanson n’est enregistrée dans votre bibliothèque.</p>
+</div>
+
 <div class="songs" *ngIf="songs.length > 0">
   <div class="view-section_head">
-    <h1><a href="#">Explorer toutes les chansons</a></h1>
+    <h1><a href="#">Explorez vos chansons préférées</a></h1>
     </div>
   <div class="track" *ngFor="let song of paginatedSongs">
           <div class="trackplay">
@@ -37,19 +41,18 @@
               </div>
           </div>
           <div class="fav">
-
-            <!-- Add To Liked Songs -->
               <div>
                 <div id="player-controls">
-                                <!-- Icone Like -->
-                                <div class="control">
-                                  <div class="button" id="play-previous" (click)="toggleLike(song)" [class.liked]="isSongLiked(song._id.toString())" aria-label="Like song">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                                    </svg>
-                                    <!-- <p>Ajouter aux favoris</p> -->
-                                  </div>
-                                </div>
+
+                   <!-- Icone Remove -->
+                   <div class="control">
+                    <div class="button" id="play-previous"  aria-label="Like song">
+                      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                      </svg>
+                      <!-- <p>Supprimer de favoris</p> -->
+                    </div>
+                  </div>
 
                 <!-- Icone Pause -->
                   <div class="control">
@@ -96,4 +99,5 @@
       </div>
 
   </div>
+
 

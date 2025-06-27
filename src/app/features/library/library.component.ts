@@ -5,13 +5,13 @@ import { SongService } from '../../services/song.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-list',
+  selector: 'app-library',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  templateUrl: './library.component.html',
+  styleUrl: './library.component.scss'
 })
-export class ListComponent implements OnInit{
+export class LibraryComponent implements OnInit{
   songs: Song[] = [];
   currentSong: HTMLAudioElement | null = null;
   currentSongId: number | null = null;
@@ -25,16 +25,15 @@ export class ListComponent implements OnInit{
   pausedAt = 0;
   isPlaying:boolean = false;
 
+
+  // ID de la playlist "chansons préférées"
+  readonly likedPlaylistId = '685ed919ef877259a3586bad';
+
   isLoading = true;
 
   currentTime = 0;
   duration = 0;
   animationFrameId: number | null = null;
-
-  likedSongIds: Set<string> = new Set();
-
-  // ID de la playlist "chansons préférées"
-  readonly likedPlaylistId = '685ed919ef877259a3586bad';
 
   constructor(private songService: SongService, private http: HttpClient) {}
 
@@ -75,16 +74,7 @@ export class ListComponent implements OnInit{
 
     this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 
-    this.songService.getAllSongs().subscribe({
-      next: (data) => {
-        this.songs = data;
-        this.isLoading = false;  // stop loader à la réception des données
-      },
-      error: (err) => {
-        console.error('Erreur API Songs :', err);
-        // this.isLoading = false;
-      }
-    });
+    this.getSongsFromFavoritePlaylist();
 
   }
 
@@ -176,46 +166,18 @@ export class ListComponent implements OnInit{
     this.play();
   }
 
-
- // Pour ajouter une chanson aux favoris (ajout)
-addToLiked(songId: string) {
-  this.likedSongIds.add(songId);
-
-  const body = {
-    songIds: [songId],  // On envoie uniquement la chanson à ajouter
-  };
-
-  this.http.patch(`http://localhost:3000/api/playlists/${this.likedPlaylistId}`, body).subscribe({
-    next: () => console.log('Chanson ajoutée à la playlist'),
-    error: (err) => console.error('Erreur ajout chanson à la playlist:', err),
-  });
-}
-
-// Pour retirer une chanson des favoris (suppression)
-removeFromLiked(songId: string) {
-  this.likedSongIds.delete(songId);
-
-  const body = {
-    songIds: [songId],  // On envoie uniquement la chanson à retirer
-  };
-
-  this.http.patch(`http://localhost:3000/api/playlists/${this.likedPlaylistId}/remove`, body).subscribe({
-    next: () => console.log('Chanson retirée de la playlist'),
-    error: (err) => console.error('Erreur suppression chanson de la playlist:', err),
-  });
-}
-
-toggleLike(song: Song) {
-  if (this.isSongLiked(song._id.toString())) {
-    this.removeFromLiked(song._id.toString());
-  } else {
-    this.addToLiked(song._id.toString());
+  getSongsFromFavoritePlaylist() {
+    this.http.get<any>(`http://localhost:3000/api/playlists/${this.likedPlaylistId}`).subscribe({
+      next: (playlist) => {
+        this.songs = playlist.songs;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Erreur récupération playlist favorite:', err);
+        this.isLoading = false;
+      }
+    });
   }
-}
-
-isSongLiked(songId: string): boolean {
-  return this.likedSongIds.has(songId);
-}
 
 
 
