@@ -1,4 +1,6 @@
 
+<p *ngIf="songs.length === 0">Aucune chanson n'existe.</p>
+
 <div class="songs" *ngIf="songs.length > 0">
   <div class="track" *ngFor="let song of paginatedSongs">
           <div class="trackplay">
