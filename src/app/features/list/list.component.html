@@ -1,14 +1,18 @@
 
 <div class="songs" *ngIf="songs.length > 0">
-  <div class="track" *ngFor="let song of songs">
+  <div class="track" *ngFor="let song of paginatedSongs">
           <div class="trackplay">
               <div class="play">
                     <div class="cover">
                       <div class="time" *ngIf="currentSongId === song._id">
                         {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
                       </div>
-                      <img [src]="song.coverImage" alt="{{ song.title }}" style="width: 100px; border-radius: 5px;" />
-                    </div>
+                      <img
+                      [src]="song.coverImage ? song.coverImage : 'https://i.ibb.co/6kfbkw3/2025-hits.jpg' "
+                      alt="{{ song.title }}"
+                      style="width: 100px; border-radius: 5px;"
+                    />
+                        </div>
                     <div class="progress-container" *ngIf="currentSongId === song._id">
                       <div class="progress-bar">
                         <div
@@ -52,6 +56,22 @@
                 </div>
               </div>
           </div>
+      </div>
+
+      <div class="pagination-controls" style="text-align:center; margin-top: 20px;">
+        <button (click)="prevPage()" [disabled]="currentPage === 1" class="button-pagination">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <span> Page {{ currentPage }} of {{ totalPages }} </span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="button-pagination">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
 
   </div>

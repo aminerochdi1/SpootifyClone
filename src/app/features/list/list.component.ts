@@ -18,6 +18,8 @@ export class ListComponent implements OnInit, OnDestroy{
   audioContext!: AudioContext;
   audioBufferSourceNode!: AudioBufferSourceNode;
   audioBuffer!: AudioBuffer;
+  songsPerPage = 5;
+  currentPage = 1;
   startTime = 0;
   pausedAt = 0;
   isPlaying:boolean = false;
@@ -29,6 +31,27 @@ export class ListComponent implements OnInit, OnDestroy{
   constructor(private songService: SongService) {}
   ngOnDestroy(): void {
     throw new Error('Method not implemented.');
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.songs.length / this.songsPerPage);
+  }
+
+  get paginatedSongs() {
+    const startIndex = (this.currentPage - 1) * this.songsPerPage;
+    return this.songs.slice(startIndex, startIndex + this.songsPerPage);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
   }
 
   togglePlayPause() {
