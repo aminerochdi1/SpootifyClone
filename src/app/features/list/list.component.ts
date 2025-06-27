@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Song } from '../../services/song.service';
 import { SongService } from '../../services/song.service';
 import { HttpClient } from '@angular/common/http';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-list',
@@ -32,6 +34,8 @@ export class ListComponent implements OnInit{
   animationFrameId: number | null = null;
 
   likedSongIds: Set<string> = new Set();
+
+  private notyf = new Notyf();
 
   // ID de la playlist "chansons préférées"
   readonly likedPlaylistId = '685ed919ef877259a3586bad';
@@ -186,8 +190,11 @@ addToLiked(songId: string) {
   };
 
   this.http.patch(`http://localhost:3000/api/playlists/${this.likedPlaylistId}`, body).subscribe({
-    next: () => console.log('Chanson ajoutée à la playlist'),
-    error: (err) => console.error('Erreur ajout chanson à la playlist:', err),
+    next: () => {
+      this.notyf.success('Ajouté à vos chansons préférées!');
+    },
+    error: (err) =>
+      this.notyf.error('Ajout à votre bibliothèque échoué !')
   });
 }
 

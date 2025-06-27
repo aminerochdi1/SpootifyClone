@@ -46,7 +46,12 @@
 
                    <!-- Icone Remove -->
                    <div class="control">
-                    <div class="button" id="play-previous"  aria-label="Like song">
+                    <div
+                    class="button"
+                    id="remove-song"
+                    aria-label="Remove song"
+                    (click)="removeFromFavorites(song._id)"
+                    >
                       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
                       </svg>

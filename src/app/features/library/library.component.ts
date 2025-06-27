@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Song } from '../../services/song.service';
 import { SongService } from '../../services/song.service';
 import { HttpClient } from '@angular/common/http';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-library',
@@ -25,6 +27,7 @@ export class LibraryComponent implements OnInit{
   pausedAt = 0;
   isPlaying:boolean = false;
 
+  private notyf = new Notyf();
 
   // ID de la playlist "chansons préférées"
   readonly likedPlaylistId = '685ed919ef877259a3586bad';
@@ -179,6 +182,19 @@ export class LibraryComponent implements OnInit{
     });
   }
 
+  removeFromFavorites(songId: number) {
+    const body = {
+      songIds: [songId]
+    };
 
+    this.http.patch(`http://localhost:3000/api/playlists/remove/${this.likedPlaylistId}`, body).subscribe({
+      next: () => {
+        this.songs = this.songs.filter(s => s._id !== songId);
+          this.notyf.success('Chanson retirée des favoris ');
+      },
+      error: (err) =>this.notyf.error('Erreur suppression favoris'),
+
+    });
+  }
 
 }
