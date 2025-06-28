@@ -14,6 +14,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
   currentSongTitle: string = '';
   currentSongArtist: string = '';
 
+  loadingSong = false;
+
+
   @Input() playlist: any = null; // playlist complète reçue du parent
   @Output() close = new EventEmitter<void>();
 
@@ -48,14 +51,23 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
 
   async loadAndPlaySong(song: any) {
-    if (!song) return;
+    if (this.loadingSong) return;  // Ignore if loading already
+    this.loadingSong = true;
+
+    if (!song) {
+      this.loadingSong = false;
+      return;
+    }
 
     this.currentSongTitle = song.title;
     this.currentSongArtist = song.artist;
 
-    this.stopAudio();
+    await this.stopAudio();
+
     const songUrl = `http://localhost:3000/${song.file}`;
     await this.loadAudio(songUrl);
+
+    this.loadingSong = false;
     this.play();
   }
 
