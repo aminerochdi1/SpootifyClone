@@ -3,18 +3,26 @@ import { CommonModule } from '@angular/common';
 import { Song } from '../../services/song.service';
 import { SongService } from '../../services/song.service';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, SearchComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit{
   songs: Song[] = [];
+  playlists: any[] = [];
+  selectedPlaylistId: string | null = null;
+  targetSongId: number | null = null;
+  openedDropdownMap: { [songId: string]: boolean } = {};
+  selectedPlaylistsMap: { [songId: string]: string } = {};
+
   currentSong: HTMLAudioElement | null = null;
   currentSongId: number | null = null;
   currentSongUrl: string | null = null;
@@ -27,18 +35,23 @@ export class ListComponent implements OnInit{
   pausedAt = 0;
   isPlaying:boolean = false;
 
+  showModal = false;
+
   isLoading = true;
 
   currentTime = 0;
   duration = 0;
   animationFrameId: number | null = null;
 
+  searchTerm: string = '';
+  filteredSongs: Song[] = [];
+
   likedSongIds: Set<string> = new Set();
 
   private notyf = new Notyf();
 
   // ID de la playlist "chansons préférées"
-  readonly likedPlaylistId = '685ed919ef877259a3586bad';
+  // readonly likedPlaylistId = '685ed919ef877259a3586bad';
 
   constructor(private songService: SongService, private http: HttpClient) {}
 
@@ -79,9 +92,19 @@ export class ListComponent implements OnInit{
 
     this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
 
+    // GET all playlists
+    this.http.get<any[]>('http://localhost:3000/api/playlists').subscribe({
+      next: (data) =>
+        this.playlists = data,
+      error: (err) =>
+        console.error('Erreur chargement playlists:', err)
+    });
+
+    // GET all songs
     this.songService.getAllSongs().subscribe({
       next: (data) => {
         this.songs = data;
+        this.filteredSongs = data;
         this.isLoading = false;  // stop loader à la réception des données
       },
       error: (err) => {
@@ -89,6 +112,7 @@ export class ListComponent implements OnInit{
         // this.isLoading = false;
       }
     });
+
 
   }
 
@@ -181,48 +205,60 @@ export class ListComponent implements OnInit{
   }
 
 
- // Pour ajouter une chanson aux favoris (ajout)
-addToLiked(songId: string) {
-  this.likedSongIds.add(songId);
 
-  const body = {
-    songIds: [songId],  // On envoie uniquement la chanson à ajouter
-  };
+openPlaylistPopup(songId: number) {
+  this.targetSongId = songId;
+  this.selectedPlaylistId = null;
+  this.showModal = true;
+}
 
-  this.http.patch(`http://localhost:3000/api/playlists/${this.likedPlaylistId}`, body).subscribe({
+closeModal() {
+  this.showModal = false;
+  this.selectedPlaylistId = null;
+  this.targetSongId = null;
+}
+
+confirmAddToPlaylist() {
+  if (!this.selectedPlaylistId || !this.targetSongId) return;
+
+  const body = { songIds: [this.targetSongId] };
+
+  this.http.patch(`http://localhost:3000/api/playlists/${this.selectedPlaylistId}`, body).subscribe({
     next: () => {
-      this.notyf.success('Ajouté à vos chansons préférées!');
+      this.notyf.success('Chanson ajoutée à la playlist !');
+      this.closeModal();
     },
-    error: (err) =>
-      this.notyf.error('Ajout à votre bibliothèque échoué !')
+    error: (err) => {
+      this.notyf.error("Échec de l'ajout à la playlist.");
+    }
   });
 }
 
-// Pour retirer une chanson des favoris (suppression)
-removeFromLiked(songId: string) {
-  this.likedSongIds.delete(songId);
+onSearch(term: string) {
+  this.searchTerm = term.trim();
 
-  const body = {
-    songIds: [songId],  // On envoie uniquement la chanson à retirer
-  };
+  let params = {};
 
-  this.http.patch(`http://localhost:3000/api/playlists/${this.likedPlaylistId}/remove`, body).subscribe({
-    next: () => console.log('Chanson retirée de la playlist'),
-    error: (err) => console.error('Erreur suppression chanson de la playlist:', err),
-  });
-}
-
-toggleLike(song: Song) {
-  if (this.isSongLiked(song._id.toString())) {
-    this.removeFromLiked(song._id.toString());
-  } else {
-    this.addToLiked(song._id.toString());
+  if (this.searchTerm) {
+    params = { title: this.searchTerm };
   }
+
+  this.http.get<Song[]>('http://localhost:3000/api/songs', { params }).subscribe({
+    next: (data) => {
+      this.songs = data;
+      this.filteredSongs = data;
+      this.currentPage = 1; // reset pagination si besoin
+    },
+    error: (err) => {
+      this.notyf.error('Erreur lors de la recherche');
+    }
+  });
 }
 
-isSongLiked(songId: string): boolean {
-  return this.likedSongIds.has(songId);
+get noResults(): boolean {
+  return !this.isLoading && this.songs.length === 0;
 }
+
 
 
 

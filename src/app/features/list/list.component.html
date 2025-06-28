@@ -1,8 +1,36 @@
 
 
+<div class="playlist-modal-overlay" *ngIf="showModal">
+  <div class="playlist-modal">
+    <h2>Ajouter à une playlist</h2>
+
+    <label *ngFor="let playlist of playlists" class="modal-option">
+      <input
+        type="radio"
+        name="selectedPlaylist"
+        [value]="playlist._id"
+        [(ngModel)]="selectedPlaylistId"
+      />
+      {{ playlist.title }}
+    </label>
+
+    <div class="modal-actions">
+      <button class="confirm-btn" (click)="confirmAddToPlaylist()">Ajouter</button>
+      <button class="cancel-btn" (click)="closeModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="isLoading" class="loader-container">
   <div class="loader"></div>
     <div class="spinner"></div>
+</div>
+
+<div *ngIf="!isLoading">
+  <app-search (search)="onSearch($event)"></app-search>
+  <div *ngIf="noResults" class="no-results">
+    Chanson non trouvée
+  </div>
 </div>
 
 <div class="songs" *ngIf="songs.length > 0">
@@ -38,16 +66,17 @@
           </div>
           <div class="fav">
 
-            <!-- Add To Liked Songs -->
+            <!-- Add To A PlayList -->
               <div>
-                <div id="player-controls">
-                                <!-- Icone Like -->
+                            <div id="player-controls">
+                                <!-- Icone Add -->
+
                                 <div class="control">
-                                  <div class="button" id="play-previous" (click)="toggleLike(song)" [class.liked]="isSongLiked(song._id.toString())" aria-label="Like song">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                                  <div class="button" id="open-dropdown" (click)="openPlaylistPopup(song._id)">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                      <path stroke="currentColor" d="M5 12h14m-7 7V5" />
                                     </svg>
-                                    <!-- <p>Ajouter aux favoris</p> -->
                                   </div>
                                 </div>
 
