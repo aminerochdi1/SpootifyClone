@@ -270,6 +270,7 @@
 
 .control {
   width: 33.333%;
+  position: flex;
   float: left;
   align-items: center;
   padding: 12px 0;
@@ -279,9 +280,11 @@
 {
   p
   {
-    font-size: 14px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
     text-transform: capitalize;
-    text-align: center;
   }
 
 }
@@ -314,4 +317,18 @@
 
 .button:hover i {
   color: #fff;
+}
+
+// Spin Animation
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating {
+  animation: spin 5s linear infinite;
 }

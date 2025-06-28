@@ -11,7 +11,11 @@
           <button (click)="close.emit()" class="close-button">✕</button>
         </div>
         <div id="album-art">
-          <img [src]="playlist?.image" class="active" />
+          <img
+          [src]="playlist?.image"
+          class="active"
+          [class.rotating]="isPlaying"
+          />
           <div id="buffer-box">Buffering ...</div>
         </div>
 
@@ -31,8 +35,8 @@
               <!-- Song Details -->
           <div class="control">
             <div class="details">
-              <p><strong>{{ currentSongTitle }}</strong></p>
-              <p>{{ currentSongArtist }}</p>
+              <p class="title"><strong>{{ currentSongTitle }}</strong></p>
+              <p class="artist">{{ currentSongArtist }}</p>
             </div>
           </div>
 
