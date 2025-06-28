@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="form-container">
+
+      <form id="registrationForm" (submit)="onSubmit()">
+        <h1>Ajouter une nouvelle playlist</h1>
+
+          <!-- Titre -->
+          <div class="form-group">
+              <label for="title">titre</label>
+              <input type="text" id="title" class="form-control" placeholder="Titre..." [(ngModel)]="title" name="title" required>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+              <label for="description">description</label>
+              <input type="text" id="description" class="form-control" placeholder="Description..." [(ngModel)]="description" name="description" required>
+          </div>
+
+          <!-- Image -->
+          <div class="form-group">
+            <img
+            class="image-preview"
+            *ngIf="imagePreview"
+            [src]="imagePreview"
+            alt="Aperçu de l'image"
+          />
+            <label for="image">image</label>
+            <input type="file" id="email" class="form-control" (change)="onFileSelected($event)" >
+
+        </div>
+
+          <button
+          type="submit"
+          class="btn"
+          id="submitBtn">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+          </svg>
+            <p>Créer une playlist</p>
+          </button>
+
+      </form>
+
+  </div>
+
+
+</div>

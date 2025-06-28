@@ -23,4 +23,13 @@ export class PlaylistService {
     return this.http.get<Playlist[]>(this.apiUrl);
   }
 
+  createPlaylist(title: string, description: string, imageFile: File) {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('image', imageFile);
+
+    return this.http.post(this.apiUrl, formData);
+  }
+
 }
