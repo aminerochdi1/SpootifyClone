@@ -261,6 +261,7 @@
 
 #player-controls {
   width: 250px;
+  align-items: center;
   height: 100%;
   margin: 0 5px 0 141px;
   float: right;
@@ -270,7 +271,19 @@
 .control {
   width: 33.333%;
   float: left;
+  align-items: center;
   padding: 12px 0;
+}
+
+.control > .details
+{
+  p
+  {
+    font-size: 14px;
+    text-transform: capitalize;
+    text-align: center;
+  }
+
 }
 
 .button {

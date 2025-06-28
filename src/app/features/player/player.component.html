@@ -1,4 +1,4 @@
-<div >
+<div>
   <div id="player-bg-artwork"></div>
   <div id="player-bg-layer"></div>
 
@@ -18,8 +18,9 @@
         <div id="player-controls">
           <div id="album-name">{{ playlist?.title }}</div>
           <div id="track-name">{{ playlist?.description }}</div>
+
           <div class="control">
-            <div class="button" id="play-previous">
+            <div class="button" id="play-previous" (click)="playPrevious()">
               <!-- Icone Previous -->
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="transform: scaleX(-1);">
                 <path d="M5 6v12l8.5-6L5 6zm9 0v12h2V6h-2z" />
@@ -27,20 +28,16 @@
             </div>
           </div>
 
+              <!-- Song Details -->
           <div class="control">
-            <div class="button" id="play-pause-button" (click)="togglePlayPause()">
-              <!-- Icone Play -->
-              <svg *ngIf="!isPlaying" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              <svg *ngIf="isPlaying" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /> <!-- Pause -->
-              </svg>
+            <div class="details">
+              <p><strong>{{ currentSongTitle }}</strong></p>
+              <p>{{ currentSongArtist }}</p>
             </div>
           </div>
 
           <div class="control">
-            <div class="button" id="play-next">
+            <div class="button" id="play-next" (click)="playNext()">
               <!-- Icone Next -->
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M5 6v12l8.5-6L5 6zm9 0v12h2V6h-2z" />

@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlayerComponent } from "../player/player.component";
 import { PlaylistService, Playlist } from '../../services/playlist.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-card',
@@ -16,7 +17,7 @@ export class CardComponent {
   pageSize = 5;
   currentPage = 0;
 
-  selectedPlaylist: Playlist | null = null;
+  selectedPlaylist: any = null;
 
   @Input() image!: string;
   @Input() title!: string;
@@ -24,7 +25,7 @@ export class CardComponent {
 
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef<HTMLDivElement>;
 
-  constructor(private playlistService: PlaylistService) {}
+  constructor(private playlistService: PlaylistService,private http: HttpClient) {}
 
   ngOnInit() {
     this.fetchPlaylists();
@@ -74,8 +75,15 @@ export class CardComponent {
     this.currentPage = 0;
   }
 
-  openPlayer(playlist: Playlist) {
-    this.selectedPlaylist = playlist;
+  openPlayer(playlistSummary: any) {
+    this.http.get(`http://localhost:3000/api/playlists/${playlistSummary._id}`).subscribe({
+      next: (playlistFull) => {
+        this.selectedPlaylist = playlistFull;
+      },
+      error: (err) => {
+        console.error('Erreur chargement playlist complète', err);
+      }
+    });
   }
 
   closePlayer() {

@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-player',
@@ -9,32 +9,112 @@ import { CommonModule } from '@angular/common';
   templateUrl: './player.component.html',
   styleUrl: './player.component.scss'
 })
-export class PlayerComponent {
+export class PlayerComponent implements OnInit, OnDestroy {
+
+  currentSongTitle: string = '';
+  currentSongArtist: string = '';
+
+  @Input() playlist: any = null; // playlist complète reçue du parent
   @Output() close = new EventEmitter<void>();
-  currentTime = 0;
-  duration = 0;
-  hoverTime: number | null = null;
-  isPlaying:boolean = false;
 
-  @Input() playlist:
-  {
-    _id: string;
-    title: string;
-    description: string;
-    image: string } | null = null;
+  currentSongIndex = 0;
+  isPlaying = false;
 
-    showTrack: boolean = false;
+  audioContext!: AudioContext;
+  audioBufferSourceNode!: AudioBufferSourceNode;
+  audioBuffer!: AudioBuffer;
 
-    toggleTrack() {
-      this.showTrack = !this.showTrack;
+  ngOnInit() {
+    this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    if (this.playlist && this.playlist.songs?.length) {
+      this.currentSongIndex = 0;
+      this.loadAndPlaySong(this.playlist.songs[this.currentSongIndex]);
     }
+  }
+
+  ngOnDestroy() {
+    this.stopAudio();
+    this.audioContext.close();
+  }
+
+  async loadAudio(url: string) {
+    if (this.audioContext.state === 'suspended') {
+      await this.audioContext.resume();
+    }
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+  }
+
+
+  async loadAndPlaySong(song: any) {
+    if (!song) return;
+
+    this.currentSongTitle = song.title;
+    this.currentSongArtist = song.artist;
+
+    this.stopAudio();
+    const songUrl = `http://localhost:3000/${song.file}`;
+    await this.loadAudio(songUrl);
+    this.play();
+  }
+
+  stopAudio(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.audioBufferSourceNode) {
+        try {
+          this.audioBufferSourceNode.onended = null;  // Remove old event listener
+          this.audioBufferSourceNode.stop();
+        } catch {
+
+        }
+        try {
+          this.audioBufferSourceNode.disconnect();
+        } catch {}
+
+        this.audioBufferSourceNode = null!;
+      }
+      this.isPlaying = false;
+      resolve();
+    });
+  }
+
+  play() {
+    this.audioBufferSourceNode = this.audioContext.createBufferSource();
+    this.audioBufferSourceNode.buffer = this.audioBuffer;
+    this.audioBufferSourceNode.connect(this.audioContext.destination);
+    this.audioBufferSourceNode.start(0);
+
+    this.isPlaying = true;
+
+    this.audioBufferSourceNode.onended = () => {
+      this.isPlaying = false;
+      this.playNext(); // Automatically play next song after current ends
+    };
+  }
+
+  playNext() {
+    this.currentSongIndex++;
+    if (this.currentSongIndex >= this.playlist.songs.length) {
+      this.currentSongIndex = 0;
+    }
+    this.loadAndPlaySong(this.playlist.songs[this.currentSongIndex]);
+  }
+
+  playPrevious() {
+    if (!this.playlist || !this.playlist.songs.length) return;
+
+    this.currentSongIndex--;
+    if (this.currentSongIndex < 0) {
+      this.currentSongIndex = this.playlist.songs.length - 1;
+    }
+    this.loadAndPlaySong(this.playlist.songs[this.currentSongIndex]);
+  }
 
   closePlayer() {
     this.close.emit();
+    this.stopAudio();
   }
 
-  togglePlayPause() {
-    this.isPlaying = !this.isPlaying;
-  }
 
 }
