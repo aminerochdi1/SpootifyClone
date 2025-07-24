@@ -71,7 +71,7 @@ Notes
 - No authentication (for simplicity, but can be added via Firebase/OAuth).
 
 # 🤝 Contributing
-## Fork the repository
+Fork the repository
 
 - Create a new branch (git checkout -b feature/YourFeature)
 
