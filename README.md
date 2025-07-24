@@ -33,10 +33,11 @@ Tool
 - MongoDB (Local)	
 - Yarn (Optional)	
 
-Setup
+# Setup
+
 1. Database Import
 
-Restore the sample database (music_playerdb):
+## Restore the sample database (music_playerdb):
 
 - mongorestore --db=music_playerdb backup/music_playerdb
 
@@ -67,7 +68,7 @@ Notes
 
 - No authentication (for simplicity, but can be added via Firebase/OAuth).
 
-DEMO (Mookup)
+# DEMO (Mookup)
 https://vimeo.com/1103971618
 
 
