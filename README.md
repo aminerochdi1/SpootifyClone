@@ -20,6 +20,10 @@ A Spotify-inspired music streaming app built with Angular 19, Node.js + Express 
 | RxJS               | REST API           | Cloud (album art)  |
 | SCSS               | Mongoose ODM       |                    |
 
+[Angular]: https://img.shields.io/badge/-Angular-DD0031?logo=angular
+[Node.js]: https://img.shields.io/badge/-Node.js-339933?logo=node.js
+[MongoDB]: https://img.shields.io/badge/-MongoDB-47A248?logo=mongodb
+
 ## Quick Start
 
 ## Prerequisites
