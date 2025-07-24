@@ -39,6 +39,8 @@ Tool
 
 ## Restore the sample database (music_playerdb):
 
+[music_playerdb](https://github.com/aminerochdi1/SpootifyClone/tree/main/backup/music_playerdb)
+
 - mongorestore --db=music_playerdb backup/music_playerdb
 
 Or for a single JSON file
@@ -67,6 +69,17 @@ Notes
 - Album art is fetched from 3rd-party APIs (e.g., Spotify, Last.fm).
 
 - No authentication (for simplicity, but can be added via Firebase/OAuth).
+
+# 🤝 Contributing
+## Fork the repository
+
+- Create a new branch (git checkout -b feature/YourFeature)
+
+- Commit changes (git commit -m 'Add some feature')
+
+- Push to branch (git push origin feature/YourFeature)
+
+- Open a Pull Request
 
 # DEMO (Mookup)
 https://vimeo.com/1103971618
