@@ -26,7 +26,8 @@ A Spotify-inspired music streaming app built with Angular 19, Node.js + Express 
 
 ## Quick Start
 
-## Prerequisites
+Prerequisites
+
 Tool
 - Node.js ≥ 18
 - Angular CLI	
