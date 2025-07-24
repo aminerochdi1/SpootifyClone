@@ -1,5 +1,70 @@
-# SpootifyCloneAngular
+# Spotify Clone - Angular 19 Music Player
 
-DEMO
-https://streamable.com/2vc074
+A Spotify-inspired music streaming app built with Angular 19, Node.js + Express API, and offline playback support.
+
+## 📌 Key Features
+
+- Offline Playback – Songs stored locally (no internet needed).
+- Cloud Album Art – Covers fetched from a 3rd-party API.
+- Playlist Management – Create, Edit, and Organize playlists.
+- Search & Browse – Find songs, artists, and playlists.
+- Responsive UI – Works on desktop & mobile.
+
+## Tech Stack
+
+
+| **Frontend**       | **Backend**        | **Database**       |
+|--------------------|--------------------|--------------------|
+| ![Angular]         | ![Node.js]         | ![MongoDB]         |
+| Angular 19         | Node.js + Express  | MongoDB (local)    |
+| RxJS               | REST API           | Cloud (album art)  |
+| SCSS               | Mongoose ODM       |                    |
+
+## Quick Start
+
+## Prerequisites
+Tool
+- Node.js ≥ 18
+- Angular CLI	
+- MongoDB (Local)	
+- Yarn (Optional)	
+
+Setup
+1. Database Import
+
+Restore the sample database (music_playerdb):
+
+- mongorestore --db=music_playerdb backup/music_playerdb
+
+Or for a single JSON file
+
+## Export
+mongoexport --db=music_playerdb --collection=songs --out=songs.json
+
+## Import
+mongoimport --db=music_playerdb --collection=songs --file=songs.json
+
+2. Backend (Node.js + Express)
+
+cd backend
+npm install
+npm start  # Runs on http://localhost:3000
+
+3. Frontend (Angular 19)
+
+cd frontend
+npm install
+npm start  # Runs on http://localhost:4200
+
+Notes
+- Songs are stored locally (no streaming server needed).
+
+- Album art is fetched from 3rd-party APIs (e.g., Spotify, Last.fm).
+
+- No authentication (for simplicity, but can be added via Firebase/OAuth).
+
+DEMO (Mookup)
+https://vimeo.com/1103971618
+
+
 
